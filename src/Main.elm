@@ -105,7 +105,7 @@ update msg model =
             --     * 「ぐー」
             --     * 「ちょき」
             --     * 「ぱー」
-            { goat = WinnerGoat
+            { goat = WildGoat
             , mainMessage = "じゃ〜んけ〜ん"
             , subMessage = "やぎさんじゃなくて ぼたんをおしてね！"
             , buttons = GuuChokiPaaButtons
