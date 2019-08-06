@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "dependencies": {
+    "cpx": "^1.5.0",
+    "elm": "^0.19.0-bugfix2",
+    "elm-analyse": "^0.16.0",
+    "elm-format": "^0.8.1",
+    "rimraf": "^2.6.3"
+  },
+  "scripts": {
+    "start": "npx elm reactor",
+    "build": "rimraf docs && cpx src/**/*.jpg docs/ && npx elm make --output=docs/index.html src/Main.elm",
+    "format": "elm-format src",
+    "test": "elm-analyse && elm-format --validate src/"
+  },
+  "author": "Kadzuya Okamoto",
+  "license": "MIT"
+}
