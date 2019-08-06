@@ -4326,6 +4326,7 @@ var author$project$Main$init = {buttons: author$project$Main$GuuChokiPaaButtons,
 var author$project$Main$AgainButton = {$: 'AgainButton'};
 var author$project$Main$DrawGoat = {$: 'DrawGoat'};
 var author$project$Main$LoserGoat = {$: 'LoserGoat'};
+var author$project$Main$WildGoat = {$: 'WildGoat'};
 var author$project$Main$WinnerGoat = {$: 'WinnerGoat'};
 var author$project$Main$update = F2(
 	function (msg, model) {
@@ -4337,7 +4338,7 @@ var author$project$Main$update = F2(
 			case 'PressPaa':
 				return {buttons: author$project$Main$AgainButton, goat: author$project$Main$WinnerGoat, mainMessage: 'まけ！', subMessage: 'ほもさぴえんすって よわい いきものだね！'};
 			case 'ClickGoat':
-				return {buttons: author$project$Main$GuuChokiPaaButtons, goat: author$project$Main$WinnerGoat, mainMessage: 'じゃ〜んけ〜ん', subMessage: 'やぎさんじゃなくて ぼたんをおしてね！'};
+				return {buttons: author$project$Main$GuuChokiPaaButtons, goat: author$project$Main$WildGoat, mainMessage: 'じゃ〜んけ〜ん', subMessage: 'やぎさんじゃなくて ぼたんをおしてね！'};
 			default:
 				return author$project$Main$init;
 		}
