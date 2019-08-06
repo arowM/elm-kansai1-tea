@@ -6,7 +6,7 @@ import Html.Attributes exposing (..)
 import Html.Events as Events
 
 
-main : Program () model msg
+main : Program () Model Msg
 main =
     Browser.sandbox { init = init, update = update, view = view }
 
