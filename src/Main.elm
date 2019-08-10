@@ -1,4 +1,4 @@
-module Main exposing (Buttons(..), Goat(..), Model, Msg(..), init, main, update, view)
+module Main exposing (main)
 
 import Browser
 import Html exposing (..)
@@ -16,33 +16,30 @@ main =
 
 
 type alias Model =
-    { goat : Goat
-    , mainMessage : String
-    , subMessage : String
-    , buttons : Buttons
+    -- あとで拡張できるようにレコード型にしておくと便利！
+    { phase : Phase
     }
 
 
-type Goat
-    = NormalGoat
-    | LoserGoat
-    | DrawGoat
-    | WinnerGoat
-    | WildGoat
+type
+    Phase
+    -- 初期状態/イベント5
+    = Start
+      -- イベント1
+    | AfterWin
+      -- イベント2
+    | AfterDraw
+      -- イベント3
+    | AfterLose
+      -- イベント4
+    | AfterClickingGoat
 
 
-type Buttons
-    = NoButtons
-    | GuuChokiPaaButtons
-    | AgainButton
-
-
+{-| 初期状態
+-}
 init : Model
 init =
-    { goat = NormalGoat
-    , mainMessage = "じゃ〜んけ〜ん"
-    , subMessage = "すきな ぼたんを おしてね！"
-    , buttons = GuuChokiPaaButtons
+    { phase = Start
     }
 
 
@@ -62,58 +59,24 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         PressGuu ->
-            -- * ヤギ: 悔しそうなやぎ
-            -- * メインメッセージ: 「かち！」
-            -- * サブメッセージ: 「ヤギさんにも ようしゃが ないね！」
-            -- * ボタンエリア
-            --     * 「もういっかい」
-            { goat = LoserGoat
-            , mainMessage = "かち！"
-            , subMessage = "ヤギさんにも ようしゃが ないね！"
-            , buttons = AgainButton
+            { phase = AfterWin
             }
 
         PressChoki ->
-            -- * ヤギ: 絶妙な表情のヤギ
-            -- * メインメッセージ: 「あいこ！」
-            -- * サブメッセージ: 「きが あうね！」
-            -- * ボタンエリア
-            --     * 「もういっかい」
-            { goat = DrawGoat
-            , mainMessage = "あいこ！"
-            , subMessage = "きが あうね！"
-            , buttons = AgainButton
+            { phase = AfterDraw
             }
 
         PressPaa ->
-            -- * ヤギ: 嬉しいヤギ
-            -- * メインメッセージ: 「まけ！」
-            -- * サブメッセージ: 「ほもさぴえんすって よわい いきものだね！」
-            -- * ボタンエリア
-            --     * 「もういっかい」
-            { goat = WinnerGoat
-            , mainMessage = "まけ！"
-            , subMessage = "ほもさぴえんすって よわい いきものだね！"
-            , buttons = AgainButton
+            { phase = AfterLose
             }
 
         ClickGoat ->
-            -- * ヤギ: 荒ぶるやぎ
-            -- * メインメッセージ: 「じゃ〜んけ〜ん」
-            -- * サブメッセージ: 「やぎさんじゃなくて ぼたんをおしてね！」
-            -- * ボタンエリア:
-            --     * 「ぐー」
-            --     * 「ちょき」
-            --     * 「ぱー」
-            { goat = WildGoat
-            , mainMessage = "じゃ〜んけ〜ん"
-            , subMessage = "やぎさんじゃなくて ぼたんをおしてね！"
-            , buttons = GuuChokiPaaButtons
+            { phase = AfterClickingGoat
             }
 
         PressAgain ->
-            -- 初期状態と一緒だからズルしちゃおう！
-            init
+            { phase = Start
+            }
 
 
 
@@ -126,67 +89,98 @@ view model =
         []
         [ img
             [ src <|
-                case model.goat of
-                    NormalGoat ->
+                case model.phase of
+                    Start ->
                         "./img/goat/normal.jpg"
 
-                    LoserGoat ->
+                    AfterWin ->
                         "./img/goat/loser.jpg"
 
-                    DrawGoat ->
+                    AfterDraw ->
                         "./img/goat/draw.jpg"
 
-                    WinnerGoat ->
+                    AfterLose ->
                         "./img/goat/winner.jpg"
 
-                    WildGoat ->
+                    AfterClickingGoat ->
                         "./img/goat/wild.jpg"
-            , Events.onClick ClickGoat
+            , if model.phase == Start then
+                Events.onClick ClickGoat
+
+              else
+                -- 何も属性がないときのテクニック
+                class ""
             ]
             []
         , h1
             []
-            [ text model.mainMessage
+            [ text <|
+                case model.phase of
+                    Start ->
+                        "じゃ〜んけ〜ん"
+
+                    AfterWin ->
+                        "かち！"
+
+                    AfterDraw ->
+                        "あいこ！"
+
+                    AfterLose ->
+                        "まけ！"
+
+                    AfterClickingGoat ->
+                        "じゃ〜んけ〜ん"
             ]
         , h2
             []
-            [ text model.subMessage
+            [ text <|
+                case model.phase of
+                    Start ->
+                        "すきな ぼたんを おしてね！"
+
+                    AfterWin ->
+                        "ヤギさんにも ようしゃが ないね！"
+
+                    AfterDraw ->
+                        "きが あうね！"
+
+                    AfterLose ->
+                        "ほもさぴえんすって よわい いきものだね！"
+
+                    AfterClickingGoat ->
+                        "やぎさんじゃなくて ぼたんをおしてね！"
             ]
-        , case model.buttons of
-            NoButtons ->
-                text ""
-
-            GuuChokiPaaButtons ->
-                div
-                    []
-                    [ button
-                        [ type_ "button"
-                        , Events.onClick PressGuu
-                        ]
-                        [ text "ぐー"
-                        ]
-                    , button
-                        [ type_ "button"
-                        , Events.onClick PressChoki
-                        ]
-                        [ text "ちょき"
-                        ]
-                    , button
-                        [ type_ "button"
-                        , Events.onClick PressPaa
-                        ]
-                        [ text "ぱー"
-                        ]
+        , if model.phase == Start || model.phase == AfterClickingGoat then
+            div
+                []
+                [ button
+                    [ type_ "button"
+                    , Events.onClick PressGuu
                     ]
-
-            AgainButton ->
-                div
-                    []
-                    [ button
-                        [ type_ "button"
-                        , Events.onClick PressAgain
-                        ]
-                        [ text "もういっかい"
-                        ]
+                    [ text "ぐー"
                     ]
+                , button
+                    [ type_ "button"
+                    , Events.onClick PressChoki
+                    ]
+                    [ text "ちょき"
+                    ]
+                , button
+                    [ type_ "button"
+                    , Events.onClick PressPaa
+                    ]
+                    [ text "ぱー"
+                    ]
+                ]
+
+          else
+            div
+                []
+                [ button
+                    [ type_ "button"
+                    , Events.onClick PressAgain
+                    ]
+                    [ text "もういっかい"
+                    ]
+                ]
         ]

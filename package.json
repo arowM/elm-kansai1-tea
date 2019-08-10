@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "npx elm reactor",
-    "build": "rimraf docs && cpx src/**/*.jpg docs/ && npx elm make --output=docs/index.html src/Main.elm",
+    "build": "rimraf docs && cpx src/**/*.jpg docs/ && npx elm make --output=docs/index.html src/Main.elm && npx elm make --output=docs/index3.html src/Main3.elm",
     "format": "elm-format src",
     "test": "elm-analyse && elm-format --validate src/"
   },
